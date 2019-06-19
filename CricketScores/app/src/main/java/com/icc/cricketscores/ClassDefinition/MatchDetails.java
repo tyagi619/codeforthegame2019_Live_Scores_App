@@ -10,12 +10,12 @@ public class MatchDetails {
     int current_Innings;
     String toss_message;
     String start_date,start_time;
-    long long match_id;
+    int match_id;
 
     public MatchDetails() {
     }
 
-    public MatchDetails(String match_No, String team1, String team2, String team1_shortname, String team2_shortname, String matchStatus, String matchResult, String score_team1, String score_team2, String venue, int current_Innings, String toss_message, String start_date, String start_time, long match_id) {
+    public MatchDetails(String match_No, String team1, String team2, String team1_shortname, String team2_shortname, String matchStatus, String matchResult, String score_team1, String score_team2, String venue, int current_Innings, String toss_message, String start_date, String start_time, int match_id) {
         this.match_No = match_No;
         this.team1 = team1;
         this.team2 = team2;
@@ -149,7 +149,7 @@ public class MatchDetails {
         return match_id;
     }
 
-    public void setMatch_id(long match_id) {
+    public void setMatch_id(int match_id) {
         this.match_id = match_id;
     }
 }

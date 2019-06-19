@@ -16,6 +16,6 @@ public class FixturesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fixtures,null);
         RecyclerView matches = view.findViewById(R.id.fixturesList);
-
+        return view;
     }
 }
