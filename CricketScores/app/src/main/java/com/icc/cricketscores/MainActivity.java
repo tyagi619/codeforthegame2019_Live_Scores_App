@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                     getStandings();
                     return true;
                 case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                    getData();
                     return true;
             }
             return false;
