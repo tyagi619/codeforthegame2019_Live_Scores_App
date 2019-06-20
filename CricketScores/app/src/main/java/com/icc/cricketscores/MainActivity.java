@@ -1,7 +1,6 @@
 package com.icc.cricketscores;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.icc.cricketscores.ClassDefinition.MatchDetails;
+import com.icc.cricketscores.ClassDefinition.TeamDetails;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
     MatchDetails[] data = new MatchDetails[48];
+    TeamDetails[] PointsTable = new TeamDetails[10];
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -40,17 +41,10 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("fixtures",data);
-                    FixturesFragment fragment = new FixturesFragment();
-                    fragment.setArguments(bundle);
-
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.frameLayout,fragment).commit();
-
+                    getData();
                     return true;
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+                    getStandings();
                     return true;
                 case R.id.navigation_notifications:
                     mTextMessage.setText(R.string.title_notifications);
@@ -95,6 +89,13 @@ public class MainActivity extends AppCompatActivity {
                     Log.v("Testing",jsonData);
                     try {
                         getMatches(jsonData);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("fixtures",data);
+                        FixturesFragment fragment = new FixturesFragment();
+                        fragment.setArguments(bundle);
+
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.frameLayout,fragment).commit();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -103,6 +104,69 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    private void getStandings() {
+        String StandingsURL = "https://dev132-cricket-live-scores-v1.p.rapidapi.com/seriesstandings.php?seriesid=2181";
+
+        if(isNetworkAvailable()){
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(StandingsURL)
+                    .header("X-RapidAPI-Host", "dev132-cricket-live-scores-v1.p.rapidapi.com")
+                    .header("X-RapidAPI-Key", "f624852d01msh1c6aed1b8c6bcbap1771f3jsn029bd3334c64")
+                    .build();
+
+            Call call = client.newCall(request);
+
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String jsonData = response.body().string();
+                    Log.v("Testing",jsonData);
+                    try {
+                        getTeamStanding(jsonData);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("tableList",PointsTable);
+                        StandingsFragment fragment = new StandingsFragment();
+                        fragment.setArguments(bundle);
+
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.frameLayout,fragment).commit();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+
+    private void getTeamStanding(String jsonData) throws JSONException{
+        JSONObject raw_data = new JSONObject(jsonData);
+
+        JSONArray standing = raw_data.getJSONArray("teams");
+        for(int i=0;i<10;i++){
+            JSONObject team = standing.getJSONObject(i);
+            setTeamData(team);
+        }
+    }
+
+    private void setTeamData(JSONObject team) throws JSONException {
+        int index = team.getInt("position");
+        index-=1;
+        PointsTable[index] = new TeamDetails();
+        PointsTable[index].setTeamName(team.getString("name"));
+        PointsTable[index].setPlayed(team.getInt("played"));
+        PointsTable[index].setWon(team.getInt("won"));
+        PointsTable[index].setLost(team.getInt("lost"));
+        PointsTable[index].setNoResult(team.getInt("noResult"));
+        PointsTable[index].setNetRunRate(team.getDouble("netRunRate"));
+        PointsTable[index].setPoints(team.getInt("points"));
+    }
+
 
     private void getMatches (String jsonData) throws JSONException {
         JSONObject raw_data= new JSONObject(jsonData);
@@ -144,8 +208,18 @@ public class MainActivity extends AppCompatActivity {
         data[index].setMatch_id(matchData.getInt("id"));
         data[index].setMatchStatus(matchData.getString("status"));
         data[index].setMatchResult(matchData.getString("matchSummaryText"));
-//        data[index].setScore_team1(matchData.getJSONObject("scores").getString("homeScore"));
-//        data[index].setScore_team2(matchData.getJSONObject("scores").getString("awayScore"));
+        if(data[index].getMatchStatus().equals("UPCOMING")){
+            data[index].setScore_team1("");
+            data[index].setScore_team2("");
+            data[index].setOvers_team1("");
+            data[index].setOvers_team2("");
+        }
+        else {
+            data[index].setScore_team1(matchData.getJSONObject("scores").getString("homeScore"));
+            data[index].setScore_team2(matchData.getJSONObject("scores").getString("awayScore"));
+            data[index].setOvers_team1(matchData.getJSONObject("scores").getString("homeOvers"));
+            data[index].setOvers_team2(matchData.getJSONObject("scores").getString("awayOvers"));
+        }
         data[index].setVenue(matchData.getJSONObject("venue").getString("name"));
         data[index].setToss_message("");
 
@@ -159,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
         int hour = Integer.parseInt(time[0]);
         int min = Integer.parseInt(time[1]);
         min = min+30;
-        if(min>60){
+        if(min>=60){
             min = min%60;
             hour=hour+1;
         }
@@ -190,7 +264,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this , "No Internet Connection",
                     Toast.LENGTH_LONG).show();
         }
-
         return isAvailable;
     }
 

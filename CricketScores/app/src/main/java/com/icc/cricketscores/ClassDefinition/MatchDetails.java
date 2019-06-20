@@ -15,11 +15,12 @@ public class MatchDetails implements Serializable {
     String toss_message;
     String start_date,start_time;
     int match_id;
+    String overs_team1,overs_team2;
 
     public MatchDetails() {
     }
 
-    public MatchDetails(String match_No, String team1, String team2, String team1_shortname, String team2_shortname, String matchStatus, String matchResult, String score_team1, String score_team2, String venue, int current_Innings, String toss_message, String start_date, String start_time, int match_id) {
+    public MatchDetails(String match_No, String team1, String team2, String team1_shortname, String team2_shortname, String matchStatus, String matchResult, String score_team1, String score_team2, String venue, int current_Innings, String toss_message, String start_date, String start_time, int match_id, String overs_team1, String overs_team2) {
         this.match_No = match_No;
         this.team1 = team1;
         this.team2 = team2;
@@ -35,6 +36,24 @@ public class MatchDetails implements Serializable {
         this.start_date = start_date;
         this.start_time = start_time;
         this.match_id = match_id;
+        this.overs_team1 = overs_team1;
+        this.overs_team2 = overs_team2;
+    }
+
+    public String getOvers_team1() {
+        return overs_team1;
+    }
+
+    public void setOvers_team1(String overs_team1) {
+        this.overs_team1 = overs_team1;
+    }
+
+    public String getOvers_team2() {
+        return overs_team2;
+    }
+
+    public void setOvers_team2(String overs_team2) {
+        this.overs_team2 = overs_team2;
     }
 
     public String getMatch_No() {

@@ -28,9 +28,19 @@ public class fixtureAdapter extends RecyclerView.Adapter<fixtureAdapter.fixtureV
     @Override
     public void onBindViewHolder(@NonNull fixtureViewHolder fixtureViewHolder, int i) {
         MatchDetails matchDetails = data[i];
-        fixtureViewHolder.team1.setText(matchDetails.getTeam1());
-        fixtureViewHolder.team2.setText(matchDetails.getTeam2());
+        fixtureViewHolder.team1.setText(matchDetails.getTeam1_shortname());
+        fixtureViewHolder.team2.setText(matchDetails.getTeam2_shortname());
         fixtureViewHolder.match.setText(matchDetails.getMatch_No());
+        fixtureViewHolder.score1.setText(matchDetails.getScore_team1());
+        fixtureViewHolder.score2.setText(matchDetails.getScore_team2());
+        fixtureViewHolder.overs1.setText(matchDetails.getOvers_team1());
+        fixtureViewHolder.overs2.setText(matchDetails.getOvers_team2());
+        if(matchDetails.getMatchStatus().equals("UPCOMING")){
+            fixtureViewHolder.summary.setText(matchDetails.getStart_date()+ "   " + matchDetails.getStart_time());
+        }
+        else{
+            fixtureViewHolder.summary.setText(matchDetails.getMatchResult());
+        }
     }
 
     @Override
