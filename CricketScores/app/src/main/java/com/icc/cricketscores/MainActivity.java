@@ -1,11 +1,13 @@
 package com.icc.cricketscores;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -38,7 +40,14 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("fixtures",data);
+                    FixturesFragment fragment = new FixturesFragment();
+                    fragment.setArguments(bundle);
+
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.frameLayout,fragment).commit();
+
                     return true;
                 case R.id.navigation_dashboard:
                     mTextMessage.setText(R.string.title_dashboard);
@@ -102,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         JSONArray fixtures = fixtureList.getJSONArray("matches");
         for(int i=0;i<48;i++){
             JSONObject matchData = fixtures.getJSONObject(i);
+//            Log.v("TEST",matchData.toString());
             setData(matchData);
         }
     }
@@ -124,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 //            Log.v("Match NUmber",Integer.toString(index));
             index=index-1;
         }
-
+        data[index] = new MatchDetails();
         data[index].setCurrent_Innings(Integer.parseInt(matchData.getString("currentInningId")));
         data[index].setTeam1(matchData.getJSONObject("homeTeam").getString("name"));
         data[index].setTeam2(matchData.getJSONObject("awayTeam").getString("name"));
@@ -134,17 +144,17 @@ public class MainActivity extends AppCompatActivity {
         data[index].setMatch_id(matchData.getInt("id"));
         data[index].setMatchStatus(matchData.getString("status"));
         data[index].setMatchResult(matchData.getString("matchSummaryText"));
-        data[index].setScore_team1(matchData.getJSONObject("scores").getString("homeScore"));
-        data[index].setScore_team2(matchData.getJSONObject("scores").getString("awayScore"));
+//        data[index].setScore_team1(matchData.getJSONObject("scores").getString("homeScore"));
+//        data[index].setScore_team2(matchData.getJSONObject("scores").getString("awayScore"));
         data[index].setVenue(matchData.getJSONObject("venue").getString("name"));
         data[index].setToss_message("");
 
         String[] start_date = matchData.getString("startDateTime").split("T");
         String[] date = start_date[0].split("-");
 
-        data[index].setStart_date(date[0]+"-"+date[1]+"-"+date[2]);
+        data[index].setStart_date(date[2]+"-"+date[1]+"-"+date[0]);
 
-        String start_time = start_date[0].split("Z")[0];
+        String start_time = start_date[1].split("Z")[0];
         String[] time = start_time.split(":");
         int hour = Integer.parseInt(time[0]);
         int min = Integer.parseInt(time[1]);

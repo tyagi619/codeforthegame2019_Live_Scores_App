@@ -1,6 +1,10 @@
 package com.icc.cricketscores.ClassDefinition;
 
-public class MatchDetails {
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class MatchDetails implements Serializable {
     String match_No;
     String team1,team2;
     String team1_shortname,team2_shortname;
