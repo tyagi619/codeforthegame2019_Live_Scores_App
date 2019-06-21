@@ -1,7 +1,11 @@
 package com.icc.cricketscores;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.icc.cricketscores.ClassDefinition.MatchDetails;
+
+import static android.support.v4.content.ContextCompat.startActivity;
 
 public class fixtureAdapter extends RecyclerView.Adapter<fixtureAdapter.fixtureViewHolder> {
 
@@ -41,6 +47,20 @@ public class fixtureAdapter extends RecyclerView.Adapter<fixtureAdapter.fixtureV
         else{
             fixtureViewHolder.summary.setText(matchDetails.getMatchResult());
         }
+        fixtureViewHolder.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(matchDetails.getMatchStatus().equals("UPCOMING")){
+                    Log.v("TAG","not started");
+                }
+                else {
+                    Log.v("TAG", "working");
+                    Intent intent = new Intent(fixtureViewHolder.context, Scorecard.class);
+                    intent.putExtra("MatchDetails", matchDetails);
+                    startActivity(fixtureViewHolder.context, intent, null);
+                }
+            }
+        });
     }
 
     @Override
@@ -51,8 +71,12 @@ public class fixtureAdapter extends RecyclerView.Adapter<fixtureAdapter.fixtureV
     public class fixtureViewHolder extends RecyclerView.ViewHolder{
         TextView team1,team2,score1,score2,overs1,overs2,summary,match;
         ImageView flag1,flag2;
+        ConstraintLayout card;
+        Context context;
         public fixtureViewHolder(View itemView){
             super(itemView);
+            context = itemView.getContext();
+            card = itemView.findViewById(R.id.cardViewFixtures);
             flag1 = itemView.findViewById(R.id.team1_flag);
             flag2 = itemView.findViewById(R.id.team2_flag);
             team1 = itemView.findViewById(R.id.team1_name);
