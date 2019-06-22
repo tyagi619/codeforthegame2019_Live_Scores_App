@@ -2,6 +2,8 @@ package com.icc.cricketscores.ClassDefinition;
 
 import android.os.Parcelable;
 
+import com.icc.cricketscores.R;
+
 import java.io.Serializable;
 
 public class MatchDetails implements Serializable {
@@ -174,5 +176,81 @@ public class MatchDetails implements Serializable {
 
     public void setMatch_id(int match_id) {
         this.match_id = match_id;
+    }
+
+    public int getFlag1Id(){
+        int flagID = R.drawable.ind;
+
+        switch (team1_shortname.toLowerCase()){
+            case "aus":
+                flagID = R.drawable.aus;
+                break;
+            case "ind":
+                flagID = R.drawable.ind;
+                break;
+            case "nz":
+                flagID = R.drawable.nz;
+                break;
+            case "eng":
+                flagID = R.drawable.eng;
+                break;
+            case  "sl":
+                flagID = R.drawable.sl;
+                break;
+            case "pak":
+                flagID = R.drawable.pak;
+                break;
+            case "sa":
+                flagID = R.drawable.sa;
+                break;
+            case "wi":
+                flagID = R.drawable.wi;
+                break;
+            case "ban":
+                flagID = R.drawable.ban;
+                break;
+            case "afg":
+                flagID = R.drawable.afg;
+                break;
+        }
+        return flagID;
+    }
+
+    public int getFlag2Id(){
+        int flagID = R.drawable.ind;
+
+        switch (team2_shortname.toLowerCase()){
+            case "aus":
+                flagID = R.drawable.aus;
+                break;
+            case "ind":
+                flagID = R.drawable.ind;
+                break;
+            case "nz":
+                flagID = R.drawable.nz;
+                break;
+            case "eng":
+                flagID = R.drawable.eng;
+                break;
+            case  "sl":
+                flagID = R.drawable.sl;
+                break;
+            case "pak":
+                flagID = R.drawable.pak;
+                break;
+            case "sa":
+                flagID = R.drawable.sa;
+                break;
+            case "wi":
+                flagID = R.drawable.wi;
+                break;
+            case "ban":
+                flagID = R.drawable.ban;
+                break;
+            case "afg":
+                flagID = R.drawable.afg;
+                break;
+        }
+        return flagID;
     }
 }

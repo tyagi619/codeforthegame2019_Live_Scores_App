@@ -2,6 +2,7 @@ package com.icc.cricketscores;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.icc.cricketscores.ClassDefinition.MatchDetails;
 
+import static android.support.v4.content.ContextCompat.getDrawable;
 import static android.support.v4.content.ContextCompat.startActivity;
 
 public class fixtureAdapter extends RecyclerView.Adapter<fixtureAdapter.fixtureViewHolder> {
@@ -34,6 +36,10 @@ public class fixtureAdapter extends RecyclerView.Adapter<fixtureAdapter.fixtureV
     @Override
     public void onBindViewHolder(@NonNull fixtureViewHolder fixtureViewHolder, int i) {
         MatchDetails matchDetails = data[i];
+        Drawable flag_team1 = getDrawable(fixtureViewHolder.context,matchDetails.getFlag1Id());
+        Drawable flag_team2 = getDrawable(fixtureViewHolder.context,matchDetails.getFlag2Id());
+        fixtureViewHolder.flag1.setImageDrawable(flag_team1);
+        fixtureViewHolder.flag2.setImageDrawable(flag_team2);
         fixtureViewHolder.team1.setText(matchDetails.getTeam1_shortname());
         fixtureViewHolder.team2.setText(matchDetails.getTeam2_shortname());
         fixtureViewHolder.match.setText(matchDetails.getMatch_No());
