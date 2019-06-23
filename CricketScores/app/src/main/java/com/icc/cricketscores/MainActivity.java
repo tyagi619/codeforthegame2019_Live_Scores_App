@@ -200,10 +200,11 @@ public class MainActivity extends AppCompatActivity {
 //            Log.v("Match NUmber",Integer.toString(index));
             index=index-1;
         }
+
         data[index] = new MatchDetails();
         data[index].setCurrent_Innings(Integer.parseInt(matchData.getString("currentInningId")));
-        data[index].setTeam1(matchData.getJSONObject("homeTeam").getString("name"));
-        data[index].setTeam2(matchData.getJSONObject("awayTeam").getString("name"));
+        data[index].setTeam1(matchData.getJSONObject("homeTeam").getString("name").split(" Men")[0]);
+        data[index].setTeam2(matchData.getJSONObject("awayTeam").getString("name").split(" Men")[0]);
         data[index].setTeam1_shortname(matchData.getJSONObject("homeTeam").getString("shortName"));
         data[index].setTeam2_shortname(matchData.getJSONObject("awayTeam").getString("shortName"));
         data[index].setMatch_No(matchData.getString("name"));

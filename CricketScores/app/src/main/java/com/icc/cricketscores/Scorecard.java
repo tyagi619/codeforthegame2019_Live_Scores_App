@@ -51,20 +51,25 @@ public class Scorecard extends AppCompatActivity {
                 if(pos==0){
                     batsmanStats = new BatsmanStats[11];
                     bowlerStats = new BowlerStats[11];
+                    inningsStats = new InningsStats();
                     for(int i=0;i<11;i++){
                         batsmanStats[i]=null;
                         bowlerStats[i]=null;
                     }
+                    inningsStats.setBowling_side(matchDetails.getTeam2());
                     getData(matchDetails.getTeam1_shortname(),matchDetails.getMatch_id());
                 }
                 else{
                     batsmanStats = new BatsmanStats[11];
                     bowlerStats = new BowlerStats[11];
+                    inningsStats = new InningsStats();
                     for(int i=0;i<11;i++){
                         batsmanStats[i]=null;
                         bowlerStats[i]=null;
                     }
+                    inningsStats.setBowling_side(matchDetails.getTeam1());
                     getData(matchDetails.getTeam2_shortname(),matchDetails.getMatch_id());
+
                 }
             }
 
@@ -80,20 +85,25 @@ public class Scorecard extends AppCompatActivity {
                 if(pos==0){
                     batsmanStats = new BatsmanStats[11];
                     bowlerStats = new BowlerStats[11];
+                    inningsStats = new InningsStats();
                     for(int i=0;i<11;i++){
                         batsmanStats[i]=null;
                         bowlerStats[i]=null;
                     }
+                    inningsStats.setBowling_side(matchDetails.getTeam2());
                     getData(matchDetails.getTeam1_shortname(),matchDetails.getMatch_id());
                 }
                 else{
                     batsmanStats = new BatsmanStats[11];
                     bowlerStats = new BowlerStats[11];
+                    inningsStats = new InningsStats();
                     for(int i=0;i<11;i++){
                         batsmanStats[i]=null;
                         bowlerStats[i]=null;
                     }
+                    inningsStats.setBowling_side(matchDetails.getTeam1());
                     getData(matchDetails.getTeam2_shortname(),matchDetails.getMatch_id());
+
                 }
             }
         });
@@ -159,7 +169,7 @@ public class Scorecard extends AppCompatActivity {
     }
 
     private void setData(JSONObject inning) throws JSONException {
-        inningsStats = new InningsStats();
+
         inningsStats.setWickets(inning.getString("wicket"));
         inningsStats.setRuns(inning.getString("run"));
         inningsStats.setOvers(inning.getString("over"));
@@ -169,6 +179,14 @@ public class Scorecard extends AppCompatActivity {
         inningsStats.setWide(inning.getString("wide"));
         inningsStats.setNoBall(inning.getString("noBall"));
         inningsStats.setRunRate(inning.getString("runRate"));
+        String[] side_name = inning.getString("name").split(" ");
+        int l=side_name.length;
+        String team_name="";
+        for(int i=2;i<l;i++){
+            team_name+=side_name[i];
+            team_name+=" ";
+        }
+        inningsStats.setSide_name(team_name);
 
         JSONArray batsman = inning.getJSONArray("batsmen");
         JSONArray bowlers = inning.getJSONArray("bowlers");
