@@ -22,7 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -34,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     NewsData[] newsData;
     MatchDetails[] data = new MatchDetails[48];
+    int index_live;
     TeamDetails[] PointsTable = new TeamDetails[10];
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -91,9 +91,11 @@ public class MainActivity extends AppCompatActivity {
                     String jsonData = response.body().string();
                     Log.v("Testing",jsonData);
                     try {
+                        index_live=47;
                         getMatches(jsonData);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("fixtures",data);
+                        bundle.putInt("index",index_live);
                         FixturesFragment fragment = new FixturesFragment();
                         fragment.setArguments(bundle);
 
@@ -313,7 +315,11 @@ public class MainActivity extends AppCompatActivity {
             time[1] = "0"+time[1];
         }
 
-        data[index].setStart_time(time[0]+":"+time[1]+":"+time[2]);
+        data[index].setStart_time(time[0]+":"+time[1]);
+
+        if(!data[index].getMatchStatus().equals("COMPLETED")){
+            index_live=index_live>index?index:index_live;
+        }
 
     }
 

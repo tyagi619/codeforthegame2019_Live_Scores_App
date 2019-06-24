@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +20,14 @@ public class FixturesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fixtures,null);
         MatchDetails[] data = (MatchDetails[]) getArguments().getSerializable("fixtures");
-        if(data==null){
-            Log.v("TAG","its null");
-        }else{
-            Log.v("TAG","not null");
-        }
+        int index = getArguments().getInt("index");
+
         RecyclerView matches = view.findViewById(R.id.RecycleViewFixtures);
 
         fixtureAdapter adapter = new fixtureAdapter(data);
         matches.setAdapter(adapter);
         matches.setLayoutManager(new LinearLayoutManager(getActivity()));
+        matches.getLayoutManager().scrollToPosition(index);
         return view;
     }
 }
