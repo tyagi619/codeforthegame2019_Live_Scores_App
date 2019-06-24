@@ -1,7 +1,6 @@
 package com.icc.cricketscores;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.icc.cricketscores.ClassDefinition.MatchDetails;
+import com.icc.cricketscores.ClassDefinition.NewsData;
 import com.icc.cricketscores.ClassDefinition.TeamDetails;
 
 import org.json.JSONArray;
@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -31,7 +32,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
+    NewsData[] newsData;
     MatchDetails[] data = new MatchDetails[48];
     TeamDetails[] PointsTable = new TeamDetails[10];
 
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                     getStandings();
                     return true;
                 case R.id.navigation_notifications:
-                    getData();
+                    getNews();
                     return true;
             }
             return false;
@@ -146,6 +147,57 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void getNews() {
+        String StandingsURL = "https://newsapi.org/v2/top-headlines?q=cricket&language=en&category=sports&apiKey=0d7a1f142efd42f48fb8cf702d24e59e";
+        //https://newsapi.org/v2/top-headlines?q=cricket&country=in&language=en&category=sports&apiKey=0d7a1f142efd42f48fb8cf702d24e59e
+        //https://newsapi.org/v2/top-headlines?q=icc&country=in&language=en&category=sports&apiKey=0d7a1f142efd42f48fb8cf702d24e59e
+        //https://newsapi.org/v2/top-headlines?q=cricket&language=en&category=sports&apiKey=0d7a1f142efd42f48fb8cf702d24e59e
+
+        if(isNetworkAvailable()){
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(StandingsURL).build();
+
+            Call call = client.newCall(request);
+
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String jsonData = response.body().string();
+                    Log.v("Testing",jsonData);
+                    try {
+                        getNewsData(jsonData);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("newsData",newsData);
+                        NewsFragment fragment = new NewsFragment();
+                        fragment.setArguments(bundle);
+
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.frameLayout,fragment).commit();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+
+    private void getNewsData(String jsonData) throws JSONException {
+        JSONObject raw_data = new JSONObject(jsonData);
+
+        JSONArray news_all = raw_data.getJSONArray("articles");
+        int count = news_all.length();
+        newsData = new NewsData[count];
+        for(int i=0;i<count;i++){
+            JSONObject news = news_all.getJSONObject(i);
+            setNewsData(news,i);
+        }
+    }
+
     private void getTeamStanding(String jsonData) throws JSONException{
         JSONObject raw_data = new JSONObject(jsonData);
 
@@ -169,6 +221,17 @@ public class MainActivity extends AppCompatActivity {
         PointsTable[index].setPoints(team.getInt("points"));
     }
 
+    private void setNewsData(JSONObject news, int i) throws JSONException {
+        newsData[i] = new NewsData();
+        newsData[i].setSource(news.getJSONObject("source").getString("name"));
+        newsData[i].setTitle(news.getString("title"));
+        newsData[i].setDescription(news.getString("description"));
+        newsData[i].setUrl(news.getString("url"));
+        newsData[i].setUrlImage(news.getString("urlToImage"));
+        String date[] = news.getString("publishedAt").split("T")[0].split("-");
+        newsData[i].setPublished(date[2]+"-"+date[1]+"-"+date[0]);
+        newsData[i].setContent(news.getString("content"));
+    }
 
     private void getMatches (String jsonData) throws JSONException {
         JSONObject raw_data= new JSONObject(jsonData);
