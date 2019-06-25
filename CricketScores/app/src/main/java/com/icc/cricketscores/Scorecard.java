@@ -8,6 +8,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.icc.cricketscores.ClassDefinition.BatsmanStats;
@@ -32,6 +35,8 @@ public class Scorecard extends AppCompatActivity {
     BatsmanStats[] batsmanStats;
     BowlerStats[] bowlerStats;
     InningsStats inningsStats;
+    ProgressBar progressBar;
+    FrameLayout frameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +48,14 @@ public class Scorecard extends AppCompatActivity {
         TabLayout.Tab t2 = tabLayout.getTabAt(1);
         t1.setText(matchDetails.getTeam1());
         t2.setText(matchDetails.getTeam2());
+        progressBar = findViewById(R.id.progressBar2);
+        progressBar.setVisibility(View.INVISIBLE);
+        frameLayout = findViewById(R.id.scoreCard);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                frameLayout.removeAllViews();
+                progressBar.setVisibility(View.VISIBLE);
                 int pos = tab.getPosition();
                 Log.v("TAG",Integer.toString(pos));
                 if(pos==0){
@@ -80,6 +90,8 @@ public class Scorecard extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                frameLayout.removeAllViews();
+                progressBar.setVisibility(View.VISIBLE);
                 int pos = tab.getPosition();
                 Log.v("TAG",Integer.toString(pos));
                 if(pos==0){
@@ -110,6 +122,7 @@ public class Scorecard extends AppCompatActivity {
     }
 
     private void getData(String Tname, long match_id) {
+
         String StandingsURL = "https://dev132-cricket-live-scores-v1.p.rapidapi.com/scorecards.php?seriesid=2181&matchid="+Long.toString(match_id);
 
         if(isNetworkAvailable()){
@@ -133,6 +146,8 @@ public class Scorecard extends AppCompatActivity {
 //                    Log.v("Testing",jsonData);
                     try {
                         boolean isValid = getStats(jsonData,Tname);
+//                        frameLayout.removeAllViews();
+                        progressBar.setVisibility(View.INVISIBLE);
                         if(isValid) {
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("bowlerStats", bowlerStats);
@@ -142,6 +157,7 @@ public class Scorecard extends AppCompatActivity {
                             fragment.setArguments(bundle);
 
                             FragmentManager fragmentManager = getSupportFragmentManager();
+//                            progressBar.setVisibility(View.GONE);
                             fragmentManager.beginTransaction().replace(R.id.scoreCard, fragment).commit();
                         }
                     } catch (JSONException e) {

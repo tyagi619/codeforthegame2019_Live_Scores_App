@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "410726979556",
+    "firebase_url": "https://cricketscores-e9184.firebaseio.com",
+    "project_id": "cricketscores-e9184",
+    "storage_bucket": "cricketscores-e9184.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410726979556:android:c9249b204b66de57",
+        "android_client_info": {
+          "package_name": "com.icc.cricketscores"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410726979556-ldigh0sb36ckm0cggr1j4l1hrf77uoig.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOv-MhQwhGKKN7Fg0ihFgNg6nrUxUsk0Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410726979556-ldigh0sb36ckm0cggr1j4l1hrf77uoig.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

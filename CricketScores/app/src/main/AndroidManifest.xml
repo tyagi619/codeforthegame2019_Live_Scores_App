@@ -14,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Scorecard"></activity>
+        <activity android:name=".Result"></activity>
+        <activity android:name=".Game" />
+        <activity android:name=".Scorecard" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">

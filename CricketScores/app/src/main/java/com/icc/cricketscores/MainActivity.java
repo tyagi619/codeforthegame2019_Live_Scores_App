@@ -1,6 +1,7 @@
 package com.icc.cricketscores;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -10,6 +11,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,8 +36,11 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     NewsData[] newsData;
+    ProgressBar progressBar;
+    FrameLayout frameLayout;
     MatchDetails[] data = new MatchDetails[48];
     int index_live;
+    BottomNavigationView navigation;
     TeamDetails[] PointsTable = new TeamDetails[10];
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -51,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_notifications:
                     getNews();
                     return true;
+                case R.id.navigation_play:
+                    Intent intent = new Intent(MainActivity.this,Game.class);
+                    intent.putExtra("number",1);
+                    intent.putExtra("score",0);
+                    MainActivity.this.startActivity(intent);
+                    MainActivity.this.finish();
+                    return true;
             }
             return false;
         }
@@ -63,12 +77,19 @@ public class MainActivity extends AppCompatActivity {
 
 //        mTextMessage = findViewById(R.id.message);
 
-        BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation = findViewById(R.id.navigation);
+        progressBar = findViewById(R.id.progressBar);
+        frameLayout = findViewById(R.id.frameLayout);
         getData();
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
     }
 
     public void getData(){
+        navigation.setEnabled(false);
+        frameLayout.removeAllViews();
+        progressBar.setVisibility(View.VISIBLE);
         String MatchUrl = "https://dev132-cricket-live-scores-v1.p.rapidapi.com/matchseries.php?seriesid=2181";
 
         if(isNetworkAvailable()){
@@ -100,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
                         fragment.setArguments(bundle);
 
                         FragmentManager fragmentManager = getSupportFragmentManager();
+                        progressBar.setVisibility(View.INVISIBLE);
+                        navigation.setEnabled(true);
                         fragmentManager.beginTransaction().replace(R.id.frameLayout,fragment).commit();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -111,6 +134,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getStandings() {
+        navigation.setEnabled(false);
+        frameLayout.removeAllViews();
+        progressBar.setVisibility(View.VISIBLE);
         String StandingsURL = "https://dev132-cricket-live-scores-v1.p.rapidapi.com/seriesstandings.php?seriesid=2181";
 
         if(isNetworkAvailable()){
@@ -140,6 +166,8 @@ public class MainActivity extends AppCompatActivity {
                         fragment.setArguments(bundle);
 
                         FragmentManager fragmentManager = getSupportFragmentManager();
+                        navigation.setEnabled(true);
+                        progressBar.setVisibility(View.INVISIBLE);
                         fragmentManager.beginTransaction().replace(R.id.frameLayout,fragment).commit();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -150,6 +178,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getNews() {
+        progressBar.setVisibility(View.VISIBLE);
+        frameLayout.removeAllViews();
+        navigation.setEnabled(false);
         String StandingsURL = "https://newsapi.org/v2/top-headlines?q=cricket&language=en&category=sports&apiKey=0d7a1f142efd42f48fb8cf702d24e59e";
         //https://newsapi.org/v2/top-headlines?q=cricket&country=in&language=en&category=sports&apiKey=0d7a1f142efd42f48fb8cf702d24e59e
         //https://newsapi.org/v2/top-headlines?q=icc&country=in&language=en&category=sports&apiKey=0d7a1f142efd42f48fb8cf702d24e59e
@@ -179,6 +210,8 @@ public class MainActivity extends AppCompatActivity {
                         fragment.setArguments(bundle);
 
                         FragmentManager fragmentManager = getSupportFragmentManager();
+                        progressBar.setVisibility(View.INVISIBLE);
+                        navigation.setEnabled(true);
                         fragmentManager.beginTransaction().replace(R.id.frameLayout,fragment).commit();
                     } catch (JSONException e) {
                         e.printStackTrace();
