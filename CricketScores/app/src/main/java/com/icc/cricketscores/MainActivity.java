@@ -121,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
                         fragment.setArguments(bundle);
 
                         FragmentManager fragmentManager = getSupportFragmentManager();
-                        progressBar.setVisibility(View.INVISIBLE);
-                        navigation.setEnabled(true);
+//                        progressBar.setVisibility(View.INVISIBLE);
+//                        navigation.setEnabled(true);
                         fragmentManager.beginTransaction().replace(R.id.frameLayout,fragment).commit();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -166,8 +166,8 @@ public class MainActivity extends AppCompatActivity {
                         fragment.setArguments(bundle);
 
                         FragmentManager fragmentManager = getSupportFragmentManager();
-                        navigation.setEnabled(true);
-                        progressBar.setVisibility(View.INVISIBLE);
+//                        navigation.setEnabled(true);
+//                        progressBar.setVisibility(View.INVISIBLE);
                         fragmentManager.beginTransaction().replace(R.id.frameLayout,fragment).commit();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -210,8 +210,8 @@ public class MainActivity extends AppCompatActivity {
                         fragment.setArguments(bundle);
 
                         FragmentManager fragmentManager = getSupportFragmentManager();
-                        progressBar.setVisibility(View.INVISIBLE);
-                        navigation.setEnabled(true);
+//                        progressBar.setVisibility(View.INVISIBLE);
+//                        navigation.setEnabled(true);
                         fragmentManager.beginTransaction().replace(R.id.frameLayout,fragment).commit();
                     } catch (JSONException e) {
                         e.printStackTrace();

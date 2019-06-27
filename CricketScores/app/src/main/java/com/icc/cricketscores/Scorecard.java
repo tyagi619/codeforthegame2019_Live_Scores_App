@@ -147,7 +147,7 @@ public class Scorecard extends AppCompatActivity {
                     try {
                         boolean isValid = getStats(jsonData,Tname);
 //                        frameLayout.removeAllViews();
-                        progressBar.setVisibility(View.INVISIBLE);
+//                        progressBar.setVisibility(View.INVISIBLE);
                         if(isValid) {
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("bowlerStats", bowlerStats);
